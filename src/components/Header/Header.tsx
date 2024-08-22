@@ -21,7 +21,8 @@ const Header: React.FC<IHeaderProps> = ({}) => {
           />
         </Link>
 
-        <Button onClick={() => {}}>tttt</Button>
+        <Button onClick={() => {
+          console.log("click")}}>sign in</Button>
       </nav>
     </header>
   )
