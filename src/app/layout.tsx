@@ -3,6 +3,7 @@ import './globals.css'
 import { ReactNode } from 'react'
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
+import StoreProvider from '@/redux/StoreProvider'
 
 export const metadata: Metadata = {
   title: 'Cars rent',
@@ -16,11 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="relative flex min-h-screen w-full flex-col">
-        <Header />
-        <div className="flex-1">{children}</div>
-        <Footer />
-      </body>
+      <StoreProvider>
+        <body className="relative flex min-h-screen w-full flex-col">
+          <Header />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </body>
+      </StoreProvider>
     </html>
   )
 }

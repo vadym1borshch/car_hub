@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 interface RentalOptions {
   dailyRate: number // Базова вартість оренди за день
   numberOfDays: number // Кількість днів оренди
@@ -39,7 +41,7 @@ export const calculateRentalCost = (options: RentalOptions): number => {
 
   const totalCost = baseCost + insuranceCost - discount + additionalFees
 
-  return totalCost
+  return Math.round(totalCost)
 }
 
 export const capitalizeFirstLetter = (word: string): string => {

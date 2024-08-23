@@ -17,18 +17,22 @@ const options = [
 ]
 
 interface ISelectProps {
-  // define your props here
+  label: string
 }
 
-const Select: React.FC<ISelectProps> = ({}) => {
-  const [selected, setSelected] = useState(options[0])
+const Select: React.FC<ISelectProps> = ({label}) => {
+  const [selected, setSelected] = useState<{
+    id: string
+    value: string
+    label: string
+  } | null>(null)
 
   return (
     <div className="relative w-28">
       <Listbox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
           <ListboxButton className="relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
-            <span className="block truncate">{selected.label}</span>
+            <span className="block truncate">{selected?.label || label}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <Image
                 src="/chevron-up-down.svg"

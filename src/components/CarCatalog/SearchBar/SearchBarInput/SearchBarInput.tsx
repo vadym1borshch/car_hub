@@ -9,14 +9,13 @@ import {
 } from '@headlessui/react'
 import { useState } from 'react'
 import { Option } from '@/components/CarCatalog/SearchBar/types'
-import axios from 'axios'
 
 interface ISearchBarInputProps {
   iconHref: string
   iconSize?: number
   options: Option[]
   placeholder?: string
-  setIdx?: (value: Option | null) => void
+  setCar?: (carOption: Option | null) => void
   onChange: (value: string) => void
   value: string
 }
@@ -26,7 +25,7 @@ const SearchBarInput: React.FC<ISearchBarInputProps> = ({
   iconSize,
   options,
   placeholder,
-  setIdx,
+  setCar,
   value,
   onChange,
 }) => {
@@ -42,10 +41,10 @@ const SearchBarInput: React.FC<ISearchBarInputProps> = ({
 
   useEffect(() => {
     if (selectedOption?.make) {
-      setIdx && setIdx(selectedOption)
+      setCar && setCar(selectedOption)
       return
     }
-  }, [selectedOption, setIdx])
+  }, [selectedOption, setCar])
 
   useEffect(() => {
     if (!value) {
@@ -84,12 +83,6 @@ const SearchBarInput: React.FC<ISearchBarInputProps> = ({
                 return (
                   <ComboboxOption
                     key={i}
-                    onClick={(e) => {
-                      console.log(e)
-                    }}
-                    onChange={(event) => {
-                      console.log(event)
-                    }}
                     value={option}
                     className={({ selected }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 hover:bg-sky-200 ${

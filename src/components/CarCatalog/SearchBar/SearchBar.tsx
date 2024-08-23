@@ -5,17 +5,25 @@ import SearchBarInput from '@/components/CarCatalog/SearchBar/SearchBarInput/Sea
 import { carMakes, carModels } from '@/components/CarCatalog/CarCard/mock'
 import Select from '@/components/Select/Select'
 import { Option } from '@/components/CarCatalog/SearchBar/types'
+import { useAppDispatch } from '@/helpers/hooks/reduxHooks'
+import { fetchCarsData } from '@/redux/slices/CarSlice'
 
-interface ISearchBarProps {
-  // define your props here
-}
+interface ISearchBarProps {}
 
 const SearchBar: React.FC<ISearchBarProps> = ({}) => {
   const [car, setCar] = useState<Option | null>(null)
   const [make, setMake] = useState('')
   const [model, setModel] = useState('')
 
+  const dispatch = useAppDispatch()
+
   const carIndex = carMakes.findIndex((elem) => elem.id === car?.id)
+
+  const resetState = () => {
+    setModel('')
+    setMake('')
+    setCar(null)
+  }
 
   return (
     <>
@@ -24,7 +32,7 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
           iconHref="car-logo.svg"
           placeholder="vw"
           options={carMakes}
-          setIdx={setCar}
+          setCar={setCar}
           value={make}
           onChange={setMake}
         />
@@ -38,9 +46,9 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
         <div className="absolute top-[20px] flex h-full w-[60px] items-center justify-center self-end sm:relative sm:top-[-2px]">
           <button
             onClick={() => {
-              setModel('')
-              setMake('')
-              setCar(null)
+              if (!make) return
+              dispatch(fetchCarsData({ make, model }))
+              resetState()
             }}
           >
             <Image
@@ -53,8 +61,8 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
         </div>
       </div>
       <div className="flex justify-center gap-2 sm:justify-start">
-        <Select />
-        <Select />
+        <Select label="Sort By" />
+        <Select label="Filter By" />
       </div>
     </>
   )
