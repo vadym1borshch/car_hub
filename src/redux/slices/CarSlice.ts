@@ -2,24 +2,30 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { CarType } from '@/components/CarCatalog/CarCard/types'
 import axios from 'axios'
+import { CarOptionType } from '@/components/CarCatalog/SearchBar/types'
 
-// Define a type for the slice state
 interface CarsState {
   status: 'success' | 'error' | 'loading' | 'idle'
   cars: CarType[]
+  currentCar: CarOptionType | null
 }
 
-// Define the initial state using that type
 const initialState: CarsState = {
   status: 'idle',
   cars: [],
+  currentCar: null,
 }
 
 export const carsSlice = createSlice({
   name: 'cars',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    setCurrentCarAction: (state, action: PayloadAction<CarOptionType>) => {
+      state.currentCar = action.payload
+    },
+    deleteCurrentCarAction: (state) => {
+      state.currentCar = null
+    },
     setCarsAction: (state, action: PayloadAction<CarType[]>) => {
       state.cars = action.payload
     },
@@ -38,6 +44,10 @@ export const carsSlice = createSlice({
   },
 })
 const apiKey = 'CRIDgfNDHYm7sKHTqNbsDPuFYkMfihk8gxuzemei'
+
+export const { setCurrentCarAction, deleteCurrentCarAction, setCarsAction } = carsSlice.actions
+
+export default carsSlice.reducer
 
 export const fetchCarsData = createAsyncThunk(
   'cars/fetchCarsData',
@@ -60,6 +70,7 @@ export const fetchCarsData = createAsyncThunk(
           year,
         },
       })
+      localStorage.setItem('cars', JSON.stringify(response.data))
       return response.data
     } catch (error: any) {
       console.error(
@@ -69,7 +80,3 @@ export const fetchCarsData = createAsyncThunk(
     }
   }
 )
-
-export const { setCarsAction } = carsSlice.actions
-
-export default carsSlice.reducer

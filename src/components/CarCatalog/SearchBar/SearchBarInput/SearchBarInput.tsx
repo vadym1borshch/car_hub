@@ -8,14 +8,16 @@ import {
   ComboboxOptions,
 } from '@headlessui/react'
 import { useState } from 'react'
-import { Option } from '@/components/CarCatalog/SearchBar/types'
+import { CarOptionType } from '@/components/CarCatalog/SearchBar/types'
+import { useAppDispatch } from '@/helpers/hooks/reduxHooks'
+import { setCurrentCarAction } from '@/redux/slices/CarSlice'
 
 interface ISearchBarInputProps {
   iconHref: string
   iconSize?: number
-  options: Option[]
+  options: CarOptionType[]
   placeholder?: string
-  setCar?: (carOption: Option | null) => void
+  setCar?: (carOption: CarOptionType | null) => void
   onChange: (value: string) => void
   value: string
 }
@@ -25,26 +27,28 @@ const SearchBarInput: React.FC<ISearchBarInputProps> = ({
   iconSize,
   options,
   placeholder,
-  setCar,
   value,
   onChange,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null)
+  const [selectedOption, setSelectedOption] = useState<CarOptionType | null>(
+    null
+  )
+  const dispatch = useAppDispatch()
 
   const filteredOptions =
     value === ''
       ? options
       : options.filter((option) => {
-          const searchField = option.make || option.model || '' // Використовуємо make або model, якщо вони є
+          const searchField = option.make || option.model || ''
           return searchField.toLowerCase().includes(value.toLowerCase())
         })
 
   useEffect(() => {
     if (selectedOption?.make) {
-      setCar && setCar(selectedOption)
+      dispatch(setCurrentCarAction(selectedOption))
       return
     }
-  }, [selectedOption, setCar])
+  }, [selectedOption, dispatch])
 
   useEffect(() => {
     if (!value) {
@@ -57,14 +61,14 @@ const SearchBarInput: React.FC<ISearchBarInputProps> = ({
         value={selectedOption}
         onChange={(option) => {
           setSelectedOption(option)
-          onChange(option?.make ? option.make : option?.model || '') // Оновлює і стан, і значення інпуту
+          onChange(option?.make ? option.make : option?.model || '')
         }}
       >
         <div className="relative w-full">
           <ComboboxInput
             className="flex w-full items-center bg-gray-300 px-6 focus:outline-none"
             aria-label="Assignee"
-            displayValue={(option: Option | null) =>
+            displayValue={(option: CarOptionType | null) =>
               option?.make ? option.make : option?.model || ''
             }
             onChange={(event) => {

@@ -25,7 +25,7 @@ const CarCatalog: React.FC<ICarCatalogProps> = ({}) => {
       ) : (
         <div className="mx-auto mt-6 flex w-full flex-wrap justify-start gap-6">
           {cars.map((car, i) => {
-            return <CarCard key={i} car={car} />
+            return <CarCard key={i} car={car} i={i} numOfEl={cars.length} />
           })}
         </div>
       )}

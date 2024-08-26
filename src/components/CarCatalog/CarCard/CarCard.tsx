@@ -1,17 +1,42 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Modal } from '@/components/Modal/Modal'
 import { CarType } from '@/components/CarCatalog/CarCard/types'
 import CarDetails from '@/components/CarCatalog/CarCard/CarDetails'
+import axios from 'axios'
 
 interface ICarCardProps {
   car: CarType
+  i: number,
+  numOfEl: number
 }
 
-const CarCard: React.FC<ICarCardProps> = ({ car }) => {
-  const { make, model, transmission, city_mpg, drive } = car
+const CarCard: React.FC<ICarCardProps> = ({ car, i, numOfEl }) => {
+  const [newCar, setNewCar] = useState(car)
+  const { make, model, transmission, city_mpg, drive, image, year } = newCar
   const [isModalOpen, setModalOpen] = useState(false)
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get('https://pixabay.com/api/', {
+          params: {
+            key: '45588835-a4ef1477fd216dc63a2a64fc4',
+            q: `${make} ${year}`,
+            category: 'cars',
+            image_type: 'photo',
+            per_page: numOfEl,
+          },
+        })
+        setNewCar({...car, image: response.data.hits[i].webformatURL})
+      } catch (error) {
+        console.error('Error fetching images:', error)
+        return []
+      }
+    }
+    fetchImage()
+  }, [car, i, make, model, newCar.make, newCar.model, numOfEl, year])
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
@@ -36,7 +61,7 @@ const CarCard: React.FC<ICarCardProps> = ({ car }) => {
           </div>
         </div>
         <div className="mt-6 flex w-full justify-center">
-          <Image src="/hero.png" alt="auto" width={250} height={200} />
+          <Image src={image ? image : "/hero.png"} alt="auto" width={250} height={200} style={{ width: "250px", height: "200px" }}/>
         </div>
         <div className="mt-6 flex w-full justify-between">
           <span className="flex flex-col items-center gap-2">
@@ -55,7 +80,7 @@ const CarCard: React.FC<ICarCardProps> = ({ car }) => {
             <span className="text-[12px] text-gray-500">{drive}</span>
           </span>
           <span className="flex flex-col items-center gap-2">
-            <Image src={'/gas.svg'} alt={'gas'} width={20} height={20} />
+            <Image src={'/gas.svg'} alt={'gas'} width={20} height={20}  style={{ width: "20px", height: "20px" }}/>
             <span className="text-[12px] text-gray-500"> {city_mpg} MPG</span>
           </span>
         </div>

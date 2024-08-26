@@ -1,4 +1,4 @@
-export type CarType = {
+export interface CarType {
   city_mpg: number
   class: string
   combination_mpg: number
@@ -11,4 +11,5 @@ export type CarType = {
   model: string
   transmission: string
   year: number
+  image?: string
 }

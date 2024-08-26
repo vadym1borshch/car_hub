@@ -3,6 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 import Button from '@/components/common/Button/Button'
 import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 
 interface IHeaderProps {
   // define your props here
@@ -21,8 +22,7 @@ const Header: React.FC<IHeaderProps> = ({}) => {
           />
         </Link>
 
-        <Button onClick={() => {
-          console.log("click")}}>sign in</Button>
+        <Button onClick={() => signIn("google")}>sign in</Button>
       </nav>
     </header>
   )
